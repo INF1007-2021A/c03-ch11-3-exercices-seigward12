@@ -3,10 +3,10 @@ Chapitre 11.2
 """
 
 
-import numbers
-import copy
 import collections
 import collections.abc
+import copy
+import numbers
 
 
 class Matrix:
@@ -47,7 +47,7 @@ class Matrix:
 		return self.__data
 
 	# TODO: Accès à un élément en lecture
-	def TODO(TODO):
+	def acces_element(self, indexes):
 		"""
 		Indexation rangée-major
 
@@ -58,9 +58,10 @@ class Matrix:
 		if indexes[0] >= self.height or indexes[1] >= self.width:
 			raise IndexError()
 		# TODO: Retourner la valeur
+		return self.data[indexes[0]*self.width + indexes[1]]
 
 	# TODO: Affectation à un élément
-	def TODO(TODO):
+	def affect_element(self, indexes, val):
 		"""
 		Indexation rangée-major
 
@@ -71,6 +72,7 @@ class Matrix:
 		if indexes[0] >= self.height or indexes[1] >= self.width:
 			raise IndexError()
 		# TODO: L'affectation
+		self.data[indexes[0]*self.width + indexes[1]] = val
 
 	def __len__(self):
 		"""
@@ -79,19 +81,21 @@ class Matrix:
 		return self.height * self.width
 
 	# TODO: Représentation affichable (conversion pour print)
-	def TODO(TODO):
+	def __str__(self):
 		# TODO: Chaque rangée est sur une ligne, avec chaque élément séparé d'un espace.
-		pass
-
+		str = ''
+		for i in range(self.height):
+			str += str(self.data[i*self.width : i*(self.width+1)])
 	# TODO: Représentation officielle
-	def TODO(TODO):
+	def __repr__(self):
 		# TODO: une string qui représente une expression pour construire l'objet.
-		pass
+		return (f'{type(self)}({self.height}, {self.width}, {[i for i in self.data]})')
 
 	# TODO: String formatée
-	def TODO(TODO):
+	def __format_str__(self, format):
 		# TODO: On veut pouvoir dir comment chaque élément doit être formaté en passant la spécification de formatage qu'on passerait à `format()`
-		pass
+		for index, val in enumerate(self.data):
+			self.data[index] = 111111
 
 	def clone(self):
 		return Matrix(self.height, self.width, self.data)
@@ -106,19 +110,19 @@ class Matrix:
 		return self.copy()
 
 	# TODO: Négation
-	def TODO(TODO):
-		pass
+	def __neg__(self):
+		return Matrix(self.height, self. width, [i*-1 for i in self.data])
 
 	# TODO: Addition
-	def TODO(TODO):
-		pass
+	def __add__(self, other):
+		return Matrix(self.height, self. width, [i+other.data[index] for index, i in enumerate(self.data)])
 	
 	# TODO: Soustraction
-	def TODO(TODO):
-		pass
+	def __sub__(self, other):
+		return self + -other
 	
 	# TODO: Multiplication matricielle/scalaire
-	def TODO(TODO):
+	def __mul__(self, other):
 		if isinstance(other, Matrix):
 			# TODO: Multiplication matricielle.
 			# Rappel de l'algorithme simple pour C = A * B, où A, B sont matrices compatibles (hauteur_A = largeur_B)
@@ -127,10 +131,15 @@ class Matrix:
 				# Pour j dans [0, largeur_C[
 					# Pour k dans [0, largeur_A[
 						# C(i, j) = A(i, k) * B(k, j)
-			pass
+			C = Matrix(self.height, other.width)
+			for i in range(len(C.height)):
+				for j in range(len(C.width)):
+					for k in range(len(self.width)):
+						C.data[i, j] = self.data[i, k] * other.data[k, j]
+
 		elif isinstance(other, numbers.Number):
 			# TODO: Multiplication scalaire.
-			pass
+			return Matrix(self.height, self. width, [i*other for i in self.data])
 		else:
 			raise TypeError()
 
